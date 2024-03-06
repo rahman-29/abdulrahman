@@ -1,0 +1,110 @@
+
+<!DOCTYPE html>
+<html lang="en" ng-app="imageGalleryApp">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Image Gallery</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .image-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+            max-width: 800px;
+        }
+
+        .image {
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease-in-out;
+            cursor: pointer;
+        }
+
+        .image:hover {
+            transform: scale(1.1);
+        }
+
+        .image img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .image-details {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 999;
+        }
+
+        .image-details img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body ng-controller="ImageGalleryController">
+
+    <div class="image-gallery">
+        <div class="image" ng-repeat="image in images" ng-click="showDetails(image)">
+            <img ng-src="{{image.src}}" alt="{{image.alt}}">
+        </div>
+    </div>
+
+    <div class="image-details" ng-show="selectedImage">
+        <span class="close-btn" ng-click="closeDetails()">X</span>
+        <img ng-src="{{selectedImage.src}}" alt="{{selectedImage.alt}}">
+        <p>{{selectedImage.details}}</p>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script>
+        var app = angular.module('imageGalleryApp', []);
+
+        app.controller('ImageGalleryController', function ($scope) {
+            $scope.images = [
+                { src: 'C:\Users\Student\Downloads\download (1).jpg', alt: 'Image 1', details: 'Details about Image 1.' },
+                { src: "C:\Users\Student\Downloads\swize).jpg", alt: 'Image 2', details: 'Details about Image 2.' },
+                { src: "C:\Users\Student\Downloads\dubai).jpg", alt: 'Image 3', details: 'Details about Image 3.' },
+                // Add more images as needed
+            ];
+
+            $scope.selectedImage = null;
+
+            $scope.showDetails = function (image) {
+                $scope.selectedImage = image;
+            };
+
+            $scope.closeDetails = function () {
+                $scope.selectedImage = null;
+            };
+        });
+    </script>
+</body>
+</html>

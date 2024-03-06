@@ -1,0 +1,115 @@
+
+<!DOCTYPE html>
+<html lang="en" ng-app="productCatalogApp">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Catalog with Filters</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .product-catalog {
+            width: 800px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+        }
+
+        .category-filter, .feature-filter {
+            margin-bottom: 20px;
+        }
+
+        .product {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 10px;
+            margin: 10px;
+            display: inline-block;
+            width: calc(33.33% - 20px);
+            box-sizing: border-box;
+        }
+
+        .product img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+        }
+
+        @media (max-width: 600px) {
+            .product {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body ng-controller="ProductCatalogController">
+
+    <div class="product-catalog">
+        <h2>Product Catalog with Filters</h2>
+
+        <div class="category-filter">
+            <label for="category">Filter by Category:</label>
+            <select id="category" ng-model="selectedCategory" ng-change="filterProducts()">
+                <option value="">All Categories</option>
+                <option ng-repeat="category in categories" value="{{category}}">{{category}}</option>
+            </select>
+        </div>
+
+        <div class="feature-filter">
+            <label for="feature">Filter by Feature:</label>
+            <select id="feature" ng-model="selectedFeature" ng-change="filterProducts()">
+                <option value="">All Features</option>
+                <option ng-repeat="feature in features" value="{{feature}}">{{feature}}</option>
+            </select>
+        </div>
+
+        <div class="product" ng-repeat="product in filteredProducts">
+            <img ng-src="{{product.image}}" alt="{{product.name}}">
+            <h3>{{product.name}}</h3>
+            <p>{{product.category}}</p>
+            <p>{{product.feature}}</p>
+            <p>${{product.price.toFixed(2)}}</p>
+        </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script>
+        var app = angular.module('productCatalogApp', []);
+
+        app.controller('ProductCatalogController', function ($scope) {
+            $scope.products = [
+                { name: 'Product 1', category: 'Electronics', feature: 'Wireless', price: 99.99, image: 'path/to/product1.jpg' },
+                { name: 'Product 2', category: 'Clothing', feature: 'Cotton', price: 49.99, image: 'path/to/product2.jpg' },
+                { name: 'Product 3', category: 'Home & Kitchen', feature: 'Stainless Steel', price: 149.99, image: 'path/to/product3.jpg' },
+                // Add more products as needed
+            ];
+
+            $scope.categories = ['Electronics', 'Clothing', 'Home & Kitchen'];
+            $scope.features = ['Wireless', 'Cotton', 'Stainless Steel'];
+
+            $scope.selectedCategory = '';
+            $scope.selectedFeature = '';
+
+            $scope.filteredProducts = $scope.products;
+
+            $scope.filterProducts = function () {
+                $scope.filteredProducts = $scope.products.filter(function (product) {
+                    return ($scope.selectedCategory === '' || product.category === $scope.selectedCategory) &&
+                           ($scope.selectedFeature === '' || product.feature === $scope.selectedFeature);
+                });
+            };
+        });
+    </script>
+</body>
+</html>

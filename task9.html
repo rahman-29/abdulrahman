@@ -1,0 +1,67 @@
+
+<!DOCTYPE html>
+<html ng-app="chatApp">
+
+<head>
+  <title>Real-Time Chat</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body ng-controller="ChatController">
+  <div id="chat-box">
+    <div ng-repeat="message in messages">
+      <span>{{ message.sender }}:</span> {{ message.text }}
+    </div>
+  </div>
+  <input type="text" ng-model="newMessage" placeholder="Type your message..." />
+  <button ng-click="sendMessage()">Send</button>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+  <script src="https://code.angularjs.org/1.8.2/angular-route.min.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.0.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.0.1/firebase-database.js"></script>
+
+  <script>
+    const app = angular.module("chatApp", []);
+
+    app.controller("ChatController", function ($scope) {
+      const firebaseConfig = {
+        apiKey: "YOUR_API_KEY",
+        authDomain: "YOUR_AUTH_DOMAIN",
+        databaseURL: "YOUR_DATABASE_URL",
+        projectId: "YOUR_PROJECT_ID",
+        storageBucket: "YOUR_STORAGE_BUCKET",
+        messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+        appId: "YOUR_APP_ID",
+      };
+
+      firebase.initializeApp(firebaseConfig);
+
+      const database = firebase.database();
+      const messagesRef = database.ref("messages");
+
+      $scope.messages = [];
+
+      messagesRef.on("child_added", function (snapshot) {
+        $scope.$apply(function () {
+          const message = snapshot.val();
+          $scope.messages.push(message);
+        });
+      });
+
+      $scope.sendMessage = function () {
+        const newMessage = {
+          sender: "User", // Set the sender as per your requirements
+          text: $scope.newMessage,
+        };
+
+        messagesRef.push(newMessage);
+
+        // Clear the input field after sending the message
+        $scope.newMessage = "";
+      };
+    });
+  </script>
+</body>
+
+</html>

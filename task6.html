@@ -1,0 +1,146 @@
+
+<!DOCTYPE html>
+<html lang="en" ng-app="quizApp">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Quiz Application</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .quiz-container {
+            width: 400px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+        }
+
+        h2 {
+            margin: 0;
+            color: #333;
+        }
+
+        .question {
+            margin: 20px 0;
+            color: #555;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        button {
+            margin: 10px 0;
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        .score {
+            margin-top: 20px;
+            color: #2ecc71;
+        }
+    </style>
+</head>
+<body ng-controller="QuizController">
+
+    <div class="quiz-container">
+        <h2>Interactive Quiz Application</h2>
+
+        <div ng-if="!quizCompleted">
+            <div class="question">{{currentQuestion.question}}</div>
+
+            <div class="options">
+                <button ng-repeat="option in currentQuestion.options" ng-click="checkAnswer(option)">
+                    {{option}}
+                </button>
+            </div>
+
+            <div class="score" ng-if="showScore">Your Score: {{score}} / {{questions.length}}</div>
+        </div>
+
+        <div ng-if="quizCompleted">
+            <p class="score">Your Final Score: {{score}} / {{questions.length}}</p>
+            <button ng-click="restartQuiz()">Restart Quiz</button>
+        </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script>
+        var app = angular.module('quizApp', []);
+
+        app.controller('QuizController', function ($scope) {
+            $scope.questions = [
+                {
+                    question: 'What is the capital of France?',
+                    options: ['Berlin', 'Paris', 'Madrid', 'Rome'],
+                    correctAnswer: 'Paris'
+                },
+                {
+                    question: 'Which planet is known as the Red Planet?',
+                    options: ['Earth', 'Mars', 'Venus', 'Jupiter'],
+                    correctAnswer: 'Mars'
+                },
+                {
+                    question: 'What is the largest mammal in the world?',
+                    options: ['Elephant', 'Giraffe', 'Blue Whale', 'Hippopotamus'],
+                    correctAnswer: 'Blue Whale'
+                }
+            ];
+
+            $scope.currentQuestionIndex = 0;
+            $scope.currentQuestion = $scope.questions[$scope.currentQuestionIndex];
+            $scope.score = 0;
+            $scope.quizCompleted = false;
+            $scope.showScore = false;
+
+            $scope.checkAnswer = function (selectedOption) {
+                if (selectedOption === $scope.currentQuestion.correctAnswer) {
+                    $scope.score++;
+                }
+
+                $scope.nextQuestion();
+            };
+
+            $scope.nextQuestion = function () {
+                $scope.currentQuestionIndex++;
+
+                if ($scope.currentQuestionIndex < $scope.questions.length) {
+                    $scope.currentQuestion = $scope.questions[$scope.currentQuestionIndex];
+                } else {
+                    $scope.quizCompleted = true;
+                    $scope.showScore = true;
+                }
+            };
+
+            $scope.restartQuiz = function () {
+                $scope.currentQuestionIndex = 0;
+                $scope.currentQuestion = $scope.questions[$scope.currentQuestionIndex];
+                $scope.score = 0;
+                $scope.quizCompleted = false;
+                $scope.showScore = false;
+            };
+        });
+    </script>
+</body>
+</html>

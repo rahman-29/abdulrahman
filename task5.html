@@ -1,0 +1,131 @@
+
+<!DOCTYPE html>
+<html lang="en" ng-app="authApp">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Authentication System</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .auth-container {
+            width: 300px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin: 10px 0;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            margin-top: 10px;
+        }
+
+        .welcome-message {
+            margin-top: 10px;
+            color: #2ecc71;
+        }
+    </style>
+</head>
+<body ng-controller="AuthController">
+
+    <div class="auth-container">
+        <h2>User Authentication System</h2>
+
+        <div ng-if="!userAuthenticated">
+            <label for="username">Username:</label>
+            <input type="text" id="username" ng-model="username">
+
+            <label for="password">Password:</label>
+            <input type="password" id="password" ng-model="password">
+
+            <button ng-click="login()">Login</button>
+            <p class="error-message" ng-if="loginError">{{loginError}}</p>
+
+            <hr>
+
+            <label for="newUsername">New Username:</label>
+            <input type="text" id="newUsername" ng-model="newUsername">
+
+            <label for="newPassword">New Password:</label>
+            <input type="password" id="newPassword" ng-model="newPassword">
+
+            <button ng-click="signup()">Sign Up</button>
+            <p class="error-message" ng-if="signupError">{{signupError}}</p>
+        </div>
+
+        <div ng-if="userAuthenticated">
+            <p class="welcome-message">Welcome, {{username}}!</p>
+            <button ng-click="logout()">Logout</button>
+        </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script>
+        var app = angular.module('authApp', []);
+
+        app.controller('AuthController', function ($scope) {
+            $scope.username = '';
+            $scope.password = '';
+            $scope.newUsername = '';
+            $scope.newPassword = '';
+            $scope.userAuthenticated = false;
+            $scope.loginError = '';
+            $scope.signupError = '';
+
+            $scope.login = function () {
+                // Implement login logic (e.g., validate credentials)
+                // For simplicity, we assume successful login here
+                $scope.userAuthenticated = true;
+                $scope.loginError = '';
+            };
+
+            $scope.signup = function () {
+                // Implement signup logic (e.g., create a new user)
+                // For simplicity, we assume successful signup here
+                $scope.userAuthenticated = true;
+                $scope.signupError = '';
+            };
+
+            $scope.logout = function () {
+                $scope.username = '';
+                $scope.password = '';
+                $scope.newUsername = '';
+                $scope.newPassword = '';
+                $scope.userAuthenticated = false;
+            };
+        });
+    </script>
+</body>
+</html>

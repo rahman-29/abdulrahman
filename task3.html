@@ -1,0 +1,114 @@
+
+<!DOCTYPE html>
+<html lang="en" ng-app="weatherApp">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-time Weather App</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .weather-app {
+            text-align: center;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        .weather-icon {
+            width: 80px;
+            height: 80px;
+            margin: 10px 0;
+        }
+
+        p {
+            margin: 5px 0;
+            color: #555;
+        }
+
+        input {
+            padding: 8px;
+            margin: 10px 0;
+        }
+
+        button {
+            padding: 8px 16px;
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body ng-controller="WeatherController">
+
+    <div class="weather-app">
+        <h2>Real-time Weather App</h2>
+
+        <input type="text" ng-model="city" placeholder="Enter city name">
+        <button ng-click="getWeather()">Get Weather</button>
+
+        <div ng-if="weatherData">
+            <img class="weather-icon" ng-src="{{getIconUrl(weatherData.weather[0].icon)}}" alt="Weather Icon">
+            <p>{{weatherData.weather[0].description}}</p>
+            <p>Temperature: {{weatherData.main.temp}}°C</p>
+            <p>Humidity: {{weatherData.main.humidity}}%</p>
+            <p>Wind Speed: {{weatherData.wind.speed}} m/s</p>
+        </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script>
+        var app = angular.module('weatherApp', []);
+
+        app.controller('WeatherController', function ($scope, $http) {
+            $scope.city = '';
+            $scope.weatherData = null;
+
+            $scope.getWeather = function () {
+                var apiKey = 'YOUR_OPENWEATHERMAP_API_KEY';
+                var apiUrl = 'https://api.openweathermap.org/data/2.5/weather';
+
+                var config = {
+                    params: {
+                        q: $scope.city,
+                        appid: apiKey,
+                        units: 'metric' // You can change the units as needed (metric, imperial, standard)
+                    }
+                };
+
+                $http.get(apiUrl, config)
+                    .then(function (response) {
+                        $scope.weatherData = response.data;
+                    })
+                    .catch(function (error) {
+                        console.error('Error fetching weather data:', error);
+                    });
+            };
+
+            $scope.getIconUrl = function (iconCode) {
+                return 'http://openweathermap.org/img/w/' + iconCode + '.png';
+            };
+        });
+    </script>
+</body>
+</html>

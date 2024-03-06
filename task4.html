@@ -1,0 +1,138 @@
+
+<!DOCTYPE html>
+<html lang="en" ng-app="eventCalendarApp">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Event Calendar</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .event-calendar {
+            width: 100%;
+            max-width: 800px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .calendar-header {
+            background-color: #3498db;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .calendar-header h2 {
+            margin: 0;
+        }
+
+        .calendar-body {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1px;
+        }
+
+        .day-cell {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .day-cell:hover {
+            background-color: #f9f9f9;
+        }
+
+        .day-number {
+            font-weight: bold;
+        }
+
+        .event {
+            margin: 5px 0;
+            padding: 5px;
+            background-color: #e74c3c;
+            color: #fff;
+            border-radius: 4px;
+        }
+
+        @media (max-width: 600px) {
+            .calendar-body {
+                grid-template-columns: repeat(1, 1fr);
+            }
+        }
+    </style>
+</head>
+<body ng-controller="EventCalendarController">
+
+    <div class="event-calendar">
+        <div class="calendar-header">
+            <h2>{{currentMonth}} {{currentYear}}</h2>
+        </div>
+
+        <div class="calendar-body">
+            <div class="day-cell" ng-repeat="day in daysInMonth">
+                <div class="day-number">{{day.number}}</div>
+                <div ng-repeat="event in day.events" class="event">{{event}}</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script>
+        var app = angular.module('eventCalendarApp', []);
+
+        app.controller('EventCalendarController', function ($scope) {
+            // Get the current date
+            var currentDate = new Date();
+
+            // Set the initial values for the current month and year
+            $scope.currentMonth = currentDate.toLocaleString('default', { month: 'long' });
+            $scope.currentYear = currentDate.getFullYear();
+
+            // Function to get the days in the current month
+            $scope.getDaysInMonth = function () {
+                var daysInMonth = [];
+                var lastDay = new Date($scope.currentYear, currentDate.getMonth() + 1, 0).getDate();
+
+                for (var i = 1; i <= lastDay; i++) {
+                    daysInMonth.push({
+                        number: i,
+                        events: [] // Array to store events for the day
+                    });
+                }
+
+                return daysInMonth;
+            };
+
+            // Set the initial days in the month
+            $scope.daysInMonth = $scope.getDaysInMonth();
+
+            // Example: Add events for specific days
+            $scope.daysInMonth[4].events.push('Meeting at 10 AM');
+            $scope.daysInMonth[10].events.push('Lunch with colleagues');
+            $scope.daysInMonth[15].events.push('Project deadline');
+            $scope.daysInMonth[22].events.push('Conference call');
+
+            // Example: Change the month
+            $scope.changeMonth = function (change) {
+                currentDate.setMonth(currentDate.getMonth() + change);
+                $scope.currentMonth = currentDate.toLocaleString('default', { month: 'long' });
+                $scope.currentYear = currentDate.getFullYear();
+                $scope.daysInMonth = $scope.getDaysInMonth();
+            };
+        });
+    </script>
+</body>
+</html>

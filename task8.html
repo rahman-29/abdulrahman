@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="todoApp">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animated To-Do List</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .todo-container {
+            width: 400px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+        }
+
+        .task {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            animation: fadeIn 0.5s;
+        }
+
+        .task:last-child {
+            border-bottom: none;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .task input {
+            flex: 1;
+            padding: 8px;
+            margin-right: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .task button {
+            background-color: #e74c3c;
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .task button:hover {
+            background-color: #c0392b;
+        }
+    </style>
+</head>
+<body ng-controller="TodoController">
+
+    <div class="todo-container">
+        <h2>Animated To-Do List</h2>
+
+        <div class="task" ng-repeat="task in tasks track by $index">
+            <input type="text" ng-model="task.name" placeholder="Enter task">
+            <button ng-click="removeTask($index)">Delete</button>
+        </div>
+
+        <div class="task">
+            <input type="text" ng-model="newTask" placeholder="New task">
+            <button ng-click="addTask()">Add</button>
+        </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script>
+        var app = angular.module('todoApp', []);
+
+        app.controller('TodoController', function ($scope) {
+            $scope.tasks = [];
+            $scope.newTask = '';
+
+            $scope.addTask = function () {
+                if ($scope.newTask.trim() !== '') {
+                    $scope.tasks.push({ name: $scope.newTask });
+                    $scope.newTask = '';
+                }
+            };
+
+            $scope.removeTask = function (index) {
+                $scope.tasks.splice(index, 1);
+            };
+        });
+    </script>
+</body>
+</html>

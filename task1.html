@@ -1,0 +1,98 @@
+
+<!DOCTYPE html>
+<html lang="en" ng-app="taskListApp">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Task List Manager</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .task-list {
+            width: 300px;
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .task {
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+        }
+
+        .task input {
+            flex: 1;
+            margin-right: 8px;
+            padding: 4px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .task button {
+            background-color: #e74c3c;
+            color: #fff;
+            border: none;
+            padding: 4px 8px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .task button:hover {
+            background-color: #c0392b;
+        }
+    </style>
+</head>
+<body ng-controller="TaskListController">
+
+    <div class="task-list">
+        <h2>Task List Manager</h2>
+
+        <div class="task" ng-repeat="task in tasks">
+            <input type="text" ng-model="task.name" placeholder="Enter task">
+            <button ng-click="removeTask($index)">Delete</button>
+        </div>
+
+        <div class="task">
+            <input type="text" ng-model="newTask" placeholder="New task">
+            <button ng-click="addTask()">Add</button>
+        </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script>
+        var app = angular.module('taskListApp', []);
+
+        app.controller('TaskListController', function ($scope) {
+            $scope.tasks = [];
+            $scope.newTask = '';
+
+            $scope.addTask = function () {
+                if ($scope.newTask.trim() !== '') {
+                    $scope.tasks.push({ name: $scope.newTask });
+                    $scope.newTask = '';
+                }
+            };
+
+            $scope.removeTask = function (index) {
+                $scope.tasks.splice(index, 1);
+            };
+        });
+    </script>
+</body>
+</html>
